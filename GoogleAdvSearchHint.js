@@ -18,16 +18,12 @@
   linkElement.rel = "stylesheet";
   document.head.appendChild(linkElement);
   const advancedSearch = {
-    advancedSearch: {
       "zh-CN": "Google 高级搜索指令：",
-      en: "Google Advanced Search Tips:"
-    },
-  }
+      en: "Google Advanced Search Tips:",
+  };
   const closingRemark = {
-    closingRemark: {
-      "zh-CN": "将鼠标悬停在提示上查看例子，或移开鼠标以关闭此框：",
-      en: "Hover over the tips to see examples or out to close this box."
-    }
+      "zh-CN": "将鼠标悬停在提示上查看例子，或移开鼠标以关闭此框.",
+      en: "Hover over the tips to see examples or out to close this box.",
   };
   const translation = {
     exact_phrase: {
@@ -124,10 +120,18 @@
   const supportedLanguages = ["zh-CN", "en"];
   // Check if any of the user's preferred languages are supported
   const language =
-    navigator.languages
-      .map((lang) => lang.split("-")[0]) // Consider only the language part, not the region
-      .find((lang) => supportedLanguages.includes(lang)) || "en";
- console.log(`Here is the language: ${language}`);
+    navigator.languages.find((lang) => supportedLanguages.includes(lang)) ||
+    "en";
+  console.log(`Here is the language: ${language}`);
+  let isDarkMode = false;
+  try {
+    isDarkMode =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    console.log("Dark mode is " + (isDarkMode ? "enabled" : "disabled") + ".");
+  } catch (error) {
+    console.log("Failed to determine the color scheme mode.", error);
+  }
 
   function startHidePopup() {
     // Clear any existing timeout to avoid hiding it prematurely
@@ -148,17 +152,6 @@
     }
   }
 
-  let isDarkMode = false;
-  try {
-    isDarkMode =
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches;
-    console.log("Dark mode is " + (isDarkMode ? "enabled" : "disabled") + ".");
-  } catch (error) {
-    console.log("Failed to determine the color scheme mode.", error);
-  }
-
-
   // Function to create a list item for each advanced search tip
   function createSearchTipsListItems(translations, language) {
     const searchTipsKeys = Object.keys(translations);
@@ -168,7 +161,7 @@
         if (typeof tip === "object" && tip[language]) {
           // Generate the HTML for each tip
           return `<li>
-                            <code class="code">${key}:</code>
+                            <code class="code">${key}</code>
                             <span class="colon">:</span>
                             <span class="description">${tip[language]}</span>
                             <span class="example">e.g., ${tip.example[language]}</span>
@@ -183,13 +176,15 @@
     // Generate the list items dynamically based on translations
     const searchTipsHTML = createSearchTipsListItems(translation, language);
     return `
-    <div class="title">${advancedSearch[language]}</div>
+    <div class="title">${advancedSearch[language] || advancedSearch["en"]}</div>
     <hr class="custom-hr" />
     <ul class="tips-list">
         ${searchTipsHTML}
     </ul>
     <hr class="custom-hr" />
-    <div class="closing-remark">${closingRemark[language]}</div>
+    <div class="closing-remark">${
+      closingRemark[language] || closingRemark["en"]
+    }</div>
     <style>
         .title, .description, .example, .code, .closing-remark {
             font-family: 'Source Code Pro', monospace;
