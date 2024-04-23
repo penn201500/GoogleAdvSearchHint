@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google Search Bar Info Popup
 // @namespace    http://tampermonkey.net/
-// @version      0.3
+// @version      1.0
 // @description  Show a popup around the Google search bar when hovering or clicking on it, and hide it when the cursor leaves.
 // @author       You
 // @match        https://www.google.com/*
@@ -18,12 +18,12 @@
   linkElement.rel = "stylesheet";
   document.head.appendChild(linkElement);
   const advancedSearch = {
-      "zh-CN": "Google 高级搜索指令：",
-      en: "Google Advanced Search Tips:",
+    "zh-CN": "Google 高级搜索指令：",
+    en: "Google Advanced Search Tips:",
   };
   const closingRemark = {
-      "zh-CN": "将鼠标悬停在提示上查看例子，或移开鼠标以关闭此框.",
-      en: "Hover over the tips to see examples or out to close this box.",
+    "zh-CN": "将鼠标悬停在提示上查看例子，或移开鼠标以关闭此框.",
+    en: "Hover over the tips to see examples or out to close this box.",
   };
   const translation = {
     exact_phrase: {
@@ -107,7 +107,7 @@
       },
     },
     show_cache: {
-      "zh-CN": "显示谷歌的缓存版本：",
+      "zh-CN": "显示谷歌缓存的网页版本：",
       en: "Show Google's cached version:",
       example: {
         "zh-CN": "例如：cache:example.com",
