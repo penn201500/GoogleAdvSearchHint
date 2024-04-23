@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google Search Bar Info Popup
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Show a popup around the Google search bar when hovering or clicking on it, and hide it when the cursor leaves.
 // @author       You
 // @match        https://www.google.com/*
@@ -33,6 +33,7 @@
         "zh-CN": '例如："精确短语"',
         en: 'e.g., "exact phrase"',
       },
+      code: "\"\""
     },
     exclude_words: {
       "zh-CN": "排除以下字词：",
@@ -41,6 +42,7 @@
         "zh-CN": "例如：-不需要的 -字词",
         en: "e.g., -unwanted -words",
       },
+      code: "-"
     },
     wildcard_search: {
       "zh-CN": "通配符/模糊搜索：",
@@ -49,6 +51,7 @@
         "zh-CN": "例如：*通配符*",
         en: "e.g., *wildcard*",
       },
+      code: "*"
     },
     limit_site: {
       "zh-CN": "限制结果到特定站点：",
@@ -57,6 +60,7 @@
         "zh-CN": "例如：site:example.com",
         en: "e.g., site:example.com",
       },
+      code: "site:"
     },
     search_filetype: {
       "zh-CN": "搜索如PDF, DOCX的文件类型：",
@@ -65,6 +69,7 @@
         "zh-CN": "例如：filetype:pdf",
         en: "e.g., filetype:pdf",
       },
+      code: "filetype"
     },
     words_in_title: {
       "zh-CN": "标题中必须包含的字词：",
@@ -73,6 +78,7 @@
         "zh-CN": "例如：intitle:weather report",
         en: "e.g., intitle:weather report",
       },
+      code: "intitle"
     },
     words_in_url: {
       "zh-CN": "URL中必须包含的字词：",
@@ -81,6 +87,7 @@
         "zh-CN": "例如：inurl:blog",
         en: "e.g., inurl:blog",
       },
+      code: "inurl"
     },
     words_in_text: {
       "zh-CN": "文本中必须包含的字词：",
@@ -89,6 +96,7 @@
         "zh-CN": '例如：intext:"privacy policy"',
         en: 'e.g., intext:"privacy policy"',
       },
+      code: "intext"
     },
     either_word: {
       "zh-CN": "搜索任一字词：",
@@ -97,6 +105,7 @@
         "zh-CN": "例如：vacation London OR Paris",
         en: "e.g., vacation London OR Paris",
       },
+      code: "OR"
     },
     find_related: {
       "zh-CN": "查找相关网站：",
@@ -105,6 +114,7 @@
         "zh-CN": "例如：related:example.com",
         en: "e.g., related:example.com",
       },
+      code: "related"
     },
     show_cache: {
       "zh-CN": "显示谷歌缓存的网页版本：",
@@ -113,6 +123,7 @@
         "zh-CN": "例如：cache:example.com",
         en: "e.g., cache:example.com",
       },
+      code: "cache"
     },
   };
 
@@ -161,7 +172,7 @@
         if (typeof tip === "object" && tip[language]) {
           // Generate the HTML for each tip
           return `<li>
-                            <code class="code">${key}</code>
+                            <code class="code">${translation[key].code}</code>
                             <span class="colon">:</span>
                             <span class="description">${tip[language]}</span>
                             <span class="example">e.g., ${tip.example[language]}</span>
