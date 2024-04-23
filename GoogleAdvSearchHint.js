@@ -17,10 +17,118 @@
     "https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&display=swap";
   linkElement.rel = "stylesheet";
   document.head.appendChild(linkElement);
+  const advancedSearch = {
+    advancedSearch: {
+      "zh-CN": "Google 高级搜索指令：",
+      en: "Google Advanced Search Tips:"
+    },
+  }
+  const closingRemark = {
+    closingRemark: {
+      "zh-CN": "将鼠标悬停在提示上查看例子，或移开鼠标以关闭此框：",
+      en: "Hover over the tips to see examples or out to close this box."
+    }
+  };
+  const translation = {
+    exact_phrase: {
+      "zh-CN": "完全匹配字词搜索：",
+      en: "Exact phrase search:",
+      example: {
+        "zh-CN": '例如："精确短语"',
+        en: 'e.g., "exact phrase"',
+      },
+    },
+    exclude_words: {
+      "zh-CN": "排除以下字词：",
+      en: "Exclude words:",
+      example: {
+        "zh-CN": "例如：-不需要的 -字词",
+        en: "e.g., -unwanted -words",
+      },
+    },
+    wildcard_search: {
+      "zh-CN": "通配符/模糊搜索：",
+      en: "Wildcard/fuzzy search:",
+      example: {
+        "zh-CN": "例如：*通配符*",
+        en: "e.g., *wildcard*",
+      },
+    },
+    limit_site: {
+      "zh-CN": "限制结果到特定站点：",
+      en: "Limit results to a specific site:",
+      example: {
+        "zh-CN": "例如：site:example.com",
+        en: "e.g., site:example.com",
+      },
+    },
+    search_filetype: {
+      "zh-CN": "搜索如PDF, DOCX的文件类型：",
+      en: "Search for files like PDF, DOCX:",
+      example: {
+        "zh-CN": "例如：filetype:pdf",
+        en: "e.g., filetype:pdf",
+      },
+    },
+    words_in_title: {
+      "zh-CN": "标题中必须包含的字词：",
+      en: "Words must appear in the title:",
+      example: {
+        "zh-CN": "例如：intitle:weather report",
+        en: "e.g., intitle:weather report",
+      },
+    },
+    words_in_url: {
+      "zh-CN": "URL中必须包含的字词：",
+      en: "Words must appear in the URL:",
+      example: {
+        "zh-CN": "例如：inurl:blog",
+        en: "e.g., inurl:blog",
+      },
+    },
+    words_in_text: {
+      "zh-CN": "文本中必须包含的字词：",
+      en: "Words must appear in the text:",
+      example: {
+        "zh-CN": '例如：intext:"privacy policy"',
+        en: 'e.g., intext:"privacy policy"',
+      },
+    },
+    either_word: {
+      "zh-CN": "搜索任一字词：",
+      en: "Search for either word:",
+      example: {
+        "zh-CN": "例如：vacation London OR Paris",
+        en: "e.g., vacation London OR Paris",
+      },
+    },
+    find_related: {
+      "zh-CN": "查找相关网站：",
+      en: "Find related websites:",
+      example: {
+        "zh-CN": "例如：related:example.com",
+        en: "e.g., related:example.com",
+      },
+    },
+    show_cache: {
+      "zh-CN": "显示谷歌的缓存版本：",
+      en: "Show Google's cached version:",
+      example: {
+        "zh-CN": "例如：cache:example.com",
+        en: "e.g., cache:example.com",
+      },
+    },
+  };
 
   let hidePopupTimeout;
+  const supportedLanguages = ["zh-CN", "en"];
+  // Check if any of the user's preferred languages are supported
+  const language =
+    navigator.languages
+      .map((lang) => lang.split("-")[0]) // Consider only the language part, not the region
+      .find((lang) => supportedLanguages.includes(lang)) || "en";
+ console.log(`Here is the language: ${language}`);
 
-  // Function to remove the popup with a delay
   function startHidePopup() {
     // Clear any existing timeout to avoid hiding it prematurely
     clearTimeout(hidePopupTimeout);
@@ -48,6 +156,107 @@
     console.log("Dark mode is " + (isDarkMode ? "enabled" : "disabled") + ".");
   } catch (error) {
     console.log("Failed to determine the color scheme mode.", error);
+  }
+
+
+  // Function to create a list item for each advanced search tip
+  function createSearchTipsListItems(translations, language) {
+    const searchTipsKeys = Object.keys(translations);
+    return searchTipsKeys
+      .map((key) => {
+        const tip = translations[key];
+        if (typeof tip === "object" && tip[language]) {
+          // Generate the HTML for each tip
+          return `<li>
+                            <code class="code">${key}:</code>
+                            <span class="colon">:</span>
+                            <span class="description">${tip[language]}</span>
+                            <span class="example">e.g., ${tip.example[language]}</span>
+                        </li>`;
+        }
+        return ""; // If there's no translation for the key, return an empty string
+      })
+      .join(""); // Join all list item strings into a single string
+  }
+
+  function generatePopupHTML(isDarkMode, language) {
+    // Generate the list items dynamically based on translations
+    const searchTipsHTML = createSearchTipsListItems(translation, language);
+    return `
+    <div class="title">${advancedSearch[language]}</div>
+    <hr class="custom-hr" />
+    <ul class="tips-list">
+        ${searchTipsHTML}
+    </ul>
+    <hr class="custom-hr" />
+    <div class="closing-remark">${closingRemark[language]}</div>
+    <style>
+        .title, .description, .example, .code, .closing-remark {
+            font-family: 'Source Code Pro', monospace;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .custom-hr {
+            border: 0;
+            height: 1px;
+            background-image: linear-gradient(to right, transparent, ${
+              isDarkMode ? "#fff" : "#555"
+            }, transparent);
+            margin: 10px 0;
+            opacity: 0;
+            animation: fadeIn 1s ease-in-out forwards; /* Apply the fadeIn animation */
+        }
+        .title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: ${isDarkMode ? "white" : "gray"};
+        }
+        .tips-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .code {
+            font-weight: bold;
+            color: ${isDarkMode ? "lightblue" : "blue"};
+        }
+        .colon {
+            font-weight: bold;
+            color: orange;
+        }
+        .description {
+            color: ${isDarkMode ? "white" : "gray"};
+            margin-left: 1%;
+        }
+        .example {
+            display: none;
+            font-style: italic;
+            margin-left: 1%;
+            color: ${
+              isDarkMode ? "#BBB" : "#555"
+            }; // Lighter for dark mode but still legible
+        }
+        .tips-list li:hover .example {
+            display: inline;
+        }
+        #customPopup {
+            max-width: 400px; /* Set a fixed maximum width for the popup */
+            width: 100%; /* This makes the popup take full width up to its max-width */
+            box-sizing: border-box; /* This ensures padding and borders are included in the width */
+            overflow: hidden; /* Hide the overflow content */
+        }
+        #customPopup:hover {
+            max-height: none; /* Show all content on hover */
+        }
+        .closing-remark {
+            font-size: 10px;
+            margin-top: 5px;
+            color: ${isDarkMode ? "lightgreen" : "darkgreen"};
+        }
+    </style>
+`;
   }
 
   // Create a function to show the popup
@@ -80,92 +289,9 @@
     popup.style.color = isDarkMode ? "#CCC" : "black"; // Lighter text color for better contrast in dark mode
     popup.style.border = isDarkMode ? "1px solid #666" : "1px solid #ccc"; // Adjust border color for dark mode
 
-    // Adding inner HTML for styled content with examples
-    popup.innerHTML = `
-          <div class="title">Google Advanced Search Tips:</div>
-          <hr class="custom-hr" />
-          <ul class="tips-list">
-              <li><code class="code">""</code><span class="colon">:</span><span class="description">Exact phrase search.</span><span class="example">e.g., "exact phrase"</span></li>
-              <li><code class="code">-</code><span class="colon">:</span><span class="description">Exclude words.</span><span class="example">e.g., -unwanted -words</span></li>
-              <li><code class="code">*</code><span class="colon">:</span><span class="description">Wildcard/fuzzy search.</span><span class="example">e.g., *wildcard*</span></li>
-              <li><code class="code">site</code><span class="colon">:</span><span class="description">Limit results to a specific site.</span><span class="example">e.g., site:example.com</span></li>
-              <li><code class="code">filetype</code><span class="colon">:</span><span class="description">Search for files like PDF, DOCX.</span><span class="example">e.g., filetype:pdf</span></li>
-              <li><code class="code">intitle</code><span class="colon">:</span><span class="description">Words must appear in the title.</span><span class="example">e.g., intitle:weather report</span></li>
-              <li><code class="code">inurl</code><span class="colon">:</span><span class="description">Words must appear in the URL.</span><span class="example">e.g., inurl:blog</span></li>
-              <li><code class="code">intext</code><span class="colon">:</span><span class="description">Words must appear in the text.</span><span class="example">e.g., intext:"privacy policy"</span></li>
-              <li><code class="code">OR</code><span class="colon">:</span><span class="description">Search for either word.</span><span class="example">e.g., vacation London OR Paris</span></li>
-              <li><code class="code">related</code><span class="colon">:</span><span class="description">Find related websites.</span><span class="example">e.g., related:example.com</span></li>
-              <li><code class="code">cache</code><span class="colon">:</span><span class="description">Show Google's cached version.</span><span class="example">e.g., cache:example.com</span></li>
-          </ul>
-          <hr class="custom-hr" />
-          <style>
-                          .title, .description, .example, .code, .closing-remark {
-                      font-family: 'Source Code Pro', monospace;
-                  }
-                          @keyframes fadeIn {
-              from { opacity: 0; }
-              to { opacity: 1; }
-          }
-          .custom-hr {
-              border: 0;
-              height: 1px;
-              background-image: linear-gradient(to right, transparent, ${
-                isDarkMode ? "#fff" : "#555"
-              }, transparent);
-              margin: 10px 0;
-              opacity: 0;
-              animation: fadeIn 1s ease-in-out forwards; /* Apply the fadeIn animation */
-          }
-              .title {
-                  font-weight: bold;
-                  margin-bottom: 5px;
-                  color: ${isDarkMode ? "white" : "gray"};
-              }
-              .tips-list {
-                  list-style-type: none;
-                  padding: 0;
-                  margin: 0;
-              }
-              .code {
-                  font-weight: bold;
-                    color: ${isDarkMode ? "lightblue" : "blue"};
-              }
-              .colon {
-                  font-weight: bold;
-                  color: orange;
-              }
-              .description {
-                    color: ${isDarkMode ? "white" : "gray"};
-                  margin-left: 1%;
-              }
-              .example {
-                  display: none;
-                  font-style: italic;
-                  margin-left: 1%;
-                  color: ${
-                    isDarkMode ? "#BBB" : "#555"
-                  }; // Lighter for dark mode but still legible
-              }
-              .tips-list li:hover .example {
-                  display: inline;
-              }
-              #customPopup {
-                  max-width: 400px; /* Set a fixed maximum width for the popup */
-                  width: 100%; /* This makes the popup take full width up to its max-width */
-                  box-sizing: border-box; /* This ensures padding and borders are included in the width */
-                  overflow: hidden; /* Hide the overflow content */
-              }
-              #customPopup:hover {
-                  max-height: none; /* Show all content on hover */
-              }
-              .closing-remark {
-                  font-size: 10px;
-                  margin-top: 5px;
-                  color: ${isDarkMode ? "lightgreen" : "darkgreen"};
-              }
-          </style>
-          <div class="closing-remark">Hover over the tips to see examples or out to close this box.</div>
-          `;
+    // Use the generatePopupHTML function to get the HTML content
+    const popupContent = generatePopupHTML(isDarkMode, language);
+    popup.innerHTML = popupContent;
 
     // Append the popup to the body of the page
     document.body.appendChild(popup);
