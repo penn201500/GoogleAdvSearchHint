@@ -1,5 +1,7 @@
 # GoogleAdvSearchHint
 
+This README is also available in [Chinese](README_CN.md).
+
 ## Google Search Bar Info Popup Script
 
 This script enhances the Google search experience by displaying a popup with advanced search tips around the Google search bar when it is hovered over or clicked. The popup will disappear when the cursor moves away.
