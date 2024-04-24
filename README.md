@@ -16,7 +16,7 @@ This script enhances the Google search experience by displaying a popup with adv
 
 ## Screenshot
 
-![GoogleAdvanceSearchHint-EN](https://easyimage.netmark.top/i/2024/04/24/113604.gif)
+![GoogleAdvanceSearchHint-EN](https://github.com/penn201500/GoogleAdvSearchHint/blob/main/GoogleAdvanceSearchHint-EN.gif)
 
 ## Installation
 
