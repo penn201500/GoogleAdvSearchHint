@@ -175,7 +175,7 @@
                             <code class="code">${translation[key].code}</code>
                             <span class="colon">:</span>
                             <span class="description">${tip[language]}</span>
-                            <span class="example">e.g., ${tip.example[language]}</span>
+                            <span class="example">${tip.example[language]}</span>
                         </li>`;
         }
         return ""; // If there's no translation for the key, return an empty string
