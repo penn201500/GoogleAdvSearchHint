@@ -170,12 +170,14 @@
     // Get the search bar element
     const searchBar = document.querySelector("#APjFqb.gLFyf");
     if (searchBar) {
+      // Determine whether to prepend a space based on whether the search bar is empty
+      const prefix = searchBar.value ? " " : "";
       // Append the selected keyword to the search bar value
       // Check if the keyword is in the set and append ':' accordingly
       if (keywordsWithColon.has(keyword)) {
-        searchBar.value += `${keyword}:`;
+        searchBar.value += `${prefix}${keyword}:`;
       } else {
-        searchBar.value += `${keyword}`;
+        searchBar.value += `${prefix}${keyword}`;
       }
       // Move the cursor to the end of the search bar value
       searchBar.focus();
@@ -189,7 +191,7 @@
   function startHidePopup() {
     // Clear any existing timeout to avoid hiding it prematurely
     clearTimeout(hidePopupTimeout);
-    hidePopupTimeout = setTimeout(removePopup, 500); // 500ms delay before hiding the popup
+    hidePopupTimeout = setTimeout(removePopup, 1500); // 500ms delay before hiding the popup
   }
 
   // Function to cancel hiding the popup if the user moves back over it
