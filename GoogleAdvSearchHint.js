@@ -33,7 +33,7 @@
         "zh-CN": '例如："精确短语"',
         en: 'e.g., "exact phrase"',
       },
-      code: "\"\""
+      code: '\"\"',
     },
     exclude_words: {
       "zh-CN": "排除以下字词：",
@@ -42,7 +42,7 @@
         "zh-CN": "例如：-不需要的 -字词",
         en: "e.g., -unwanted -words",
       },
-      code: "-"
+      code: "-",
     },
     wildcard_search: {
       "zh-CN": "通配符/模糊搜索：",
@@ -51,7 +51,7 @@
         "zh-CN": "例如：*通配符*",
         en: "e.g., *wildcard*",
       },
-      code: "*"
+      code: "*",
     },
     limit_site: {
       "zh-CN": "限制结果到特定站点：",
@@ -60,7 +60,7 @@
         "zh-CN": "例如：site:example.com",
         en: "e.g., site:example.com",
       },
-      code: "site:"
+      code: "site",
     },
     search_filetype: {
       "zh-CN": "搜索如PDF, DOCX的文件类型：",
@@ -69,7 +69,7 @@
         "zh-CN": "例如：filetype:pdf",
         en: "e.g., filetype:pdf",
       },
-      code: "filetype"
+      code: "filetype",
     },
     words_in_title: {
       "zh-CN": "标题中必须包含的字词：",
@@ -78,7 +78,7 @@
         "zh-CN": "例如：intitle:weather report",
         en: "e.g., intitle:weather report",
       },
-      code: "intitle"
+      code: "intitle",
     },
     words_in_url: {
       "zh-CN": "URL中必须包含的字词：",
@@ -87,7 +87,7 @@
         "zh-CN": "例如：inurl:blog",
         en: "e.g., inurl:blog",
       },
-      code: "inurl"
+      code: "inurl",
     },
     words_in_text: {
       "zh-CN": "文本中必须包含的字词：",
@@ -96,7 +96,7 @@
         "zh-CN": '例如：intext:"privacy policy"',
         en: 'e.g., intext:"privacy policy"',
       },
-      code: "intext"
+      code: "intext",
     },
     either_word: {
       "zh-CN": "搜索任一字词：",
@@ -105,7 +105,7 @@
         "zh-CN": "例如：vacation London OR Paris",
         en: "e.g., vacation London OR Paris",
       },
-      code: "OR"
+      code: "OR",
     },
     find_related: {
       "zh-CN": "查找相关网站：",
@@ -114,7 +114,7 @@
         "zh-CN": "例如：related:example.com",
         en: "e.g., related:example.com",
       },
-      code: "related"
+      code: "related",
     },
     show_cache: {
       "zh-CN": "显示谷歌缓存的网页版本：",
@@ -123,7 +123,7 @@
         "zh-CN": "例如：cache:example.com",
         en: "e.g., cache:example.com",
       },
-      code: "cache"
+      code: "cache",
     },
   };
 
@@ -142,6 +142,33 @@
     console.log("Dark mode is " + (isDarkMode ? "enabled" : "disabled") + ".");
   } catch (error) {
     console.log("Failed to determine the color scheme mode.", error);
+  }
+
+    // Function to attach click handlers to list items
+    function attachClickHandlers() {
+      const items = document.querySelectorAll(".tips-list li");
+      items.forEach(item => {
+          item.addEventListener("click", function () {
+              handlePopupItemClick(this.getAttribute("data-keyword"));
+          });
+      });
+  }
+
+  // Function to handle click event on popup items
+  function handlePopupItemClick(keyword) {
+    console.log("🚀 ~ handlePopupItemClick ~ keyword:\n\n", keyword);
+    // Get the search bar element
+    const searchBar = document.querySelector("#APjFqb.gLFyf");
+    if (searchBar) {
+      // Append the selected keyword to the search bar value
+      searchBar.value += `${keyword}`;
+      // Move the cursor to the end of the search bar value
+      searchBar.focus();
+      searchBar.setSelectionRange(
+        searchBar.value.length,
+        searchBar.value.length
+      );
+    }
   }
 
   function startHidePopup() {
@@ -171,7 +198,7 @@
         const tip = translations[key];
         if (typeof tip === "object" && tip[language]) {
           // Generate the HTML for each tip
-          return `<li>
+          return `<li data-keyword="${translation[key].code}">
                             <code class="code">${translation[key].code}</code>
                             <span class="colon">:</span>
                             <span class="description">${tip[language]}</span>
@@ -187,14 +214,14 @@
     // Generate the list items dynamically based on translations
     const searchTipsHTML = createSearchTipsListItems(translation, language);
     return `
-    <div class="title">${advancedSearch[language] || advancedSearch["en"]}</div>
+    <div class="title">${advancedSearch[language] || advancedSearch.en}</div>
     <hr class="custom-hr" />
     <ul class="tips-list">
         ${searchTipsHTML}
     </ul>
     <hr class="custom-hr" />
     <div class="closing-remark">${
-      closingRemark[language] || closingRemark["en"]
+      closingRemark[language] || closingRemark.en
     }</div>
     <style>
         .title, .description, .example, .code, .closing-remark {
@@ -301,9 +328,15 @@
 
     // Append the popup to the body of the page
     document.body.appendChild(popup);
+    // Attach click handlers to the popup items
+    attachClickHandlers();
     // Attach event listeners to popup itself
     popup.addEventListener("mouseover", cancelHidePopup);
     popup.addEventListener("mouseleave", startHidePopup);
+    // Prevent hiding popup when clicking on popup items
+    popup.addEventListener("click", function (event) {
+      event.stopPropagation(); // Prevent event bubbling
+    });
   }
 
   // Function to initialize event listeners
