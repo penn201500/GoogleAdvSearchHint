@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google Search Bar Info Popup
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      2.0
 // @description  Show a popup around the Google search bar when hovering or clicking on it, and hide it when the cursor leaves.
 // @author       You
 // @match        https://www.google.com/*
@@ -156,7 +156,6 @@
 
   // Function to handle click event on popup items
   function handlePopupItemClick(keyword) {
-    console.log("🚀 ~ handlePopupItemClick ~ keyword:\n\n", keyword);
     // Define a set of keywords that need a colon appended after them
     const keywordsSet = new Set([
       "site",
@@ -200,7 +199,7 @@
   function startHidePopup() {
     // Clear any existing timeout to avoid hiding it prematurely
     clearTimeout(hidePopupTimeout);
-    hidePopupTimeout = setTimeout(removePopup, 1500); // 500ms delay before hiding the popup
+    hidePopupTimeout = setTimeout(removePopup, 1000); // 1000ms delay before hiding the popup
   }
 
   // Function to cancel hiding the popup if the user moves back over it
@@ -322,8 +321,10 @@
 
   // Create a function to show the popup
   function showPopup() {
-    removePopup(); // Ensure any existing popup is removed before creating a new one
-
+    if (document.getElementById("customPopup")) {
+      // If popup already exists, do nothing
+      return;
+    }
     // Create a new div element for the popup
     const popup = document.createElement("div");
     popup.id = "customPopup";
@@ -372,12 +373,26 @@
     const searchBar = document.querySelector("#APjFqb.gLFyf");
     if (searchBar) {
       console.log("Search bar found, adding event listeners.");
+      searchBar.addEventListener("click", function (event) {
+        event.stopPropagation(); // Prevent event bubbling
+        showPopup();
+      });
       searchBar.addEventListener("mouseover", showPopup);
       searchBar.addEventListener("focus", showPopup);
       // Attach event listeners to the search bar for mouseleave
       searchBar.addEventListener("mouseleave", startHidePopup);
       // Hide the popup when the search bar loses focus, with a delay
       searchBar.addEventListener("blur", startHidePopup);
+
+      // Prevent popup from hiding when clicking inside the popup itself
+      document.addEventListener("click", function (event) {
+        if (
+          !document.getElementById("customPopup").contains(event.target) &&
+          event.target !== searchBar
+        ) {
+          removePopup(); // Remove the popup if clicked outside of popup and search bar
+        }
+      });
     } else {
       console.log("Search bar not found, waiting...");
       setTimeout(initEventListeners, 500); // Wait 500ms and try again
