@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google Search Bar Info Popup
 // @namespace    http://tampermonkey.net/
-// @version      2.1
+// @version      2.2
 // @description  Show a popup around the Google search bar when hovering or clicking on it, and hide it when the cursor leaves.
 // @author       You
 // @match        https://www.google.com/*
@@ -199,7 +199,7 @@
   function startHidePopup() {
     // Clear any existing timeout to avoid hiding it prematurely
     clearTimeout(hidePopupTimeout);
-    hidePopupTimeout = setTimeout(removePopup, 1000); // 1000ms delay before hiding the popup
+    hidePopupTimeout = setTimeout(removePopup, 800); // 800ms delay before hiding the popup
   }
 
   // Function to cancel hiding the popup if the user moves back over it
@@ -242,6 +242,7 @@
     const searchTipsHTML = createSearchTipsListItems(translation, language);
     return `
     <div class="title">${advancedSearch[language] || advancedSearch.en}</div>
+    <div id="cancelButton">&#10006;</div>
     <hr class="custom-hr" />
     <ul class="tips-list">
         ${searchTipsHTML}
@@ -310,6 +311,14 @@
         #customPopup:hover {
             max-height: none; /* Show all content on hover */
         }
+        #cancelButton {
+          position: absolute;
+          top: 5px;
+          right: 5px;
+          cursor: pointer;
+          font-size: 14px;
+          color: ${isDarkMode ? "#CCC" : "black"};
+        }
         .closing-remark {
             font-size: 10px;
             margin-top: 5px;
@@ -321,6 +330,7 @@
 
   // Create a function to show the popup
   function showPopup() {
+    const searchBar = document.querySelector("#APjFqb.gLFyf");
     if (document.getElementById("customPopup")) {
       // If popup already exists, do nothing
       return;
@@ -366,11 +376,14 @@
     popup.addEventListener("click", function (event) {
       event.stopPropagation(); // Prevent event bubbling
     });
+    // Add event listener for the cancel button
+    const cancelButton = popup.querySelector("#cancelButton");
+    cancelButton.addEventListener("click", removePopup);
     // Adjust position to be below the search bar, accounting for scrolling
     const rect = searchBar.getBoundingClientRect();
     popup.style.top = `${rect.bottom + window.scrollY}px`; // Use bottom + scrollY for absolute positioning relative to the page
     popup.style.left = `${rect.left + window.scrollX}px`; // Align left edge with search bar's left
-    popup.style.transform = 'translateX(0%)'; // Remove centering transformation if previously set
+    popup.style.transform = "translateX(0%)"; // Remove centering transformation if previously set
   }
 
   // Function to initialize event listeners
