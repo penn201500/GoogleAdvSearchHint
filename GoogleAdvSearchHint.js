@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google Search Bar Info Popup
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  Show a popup around the Google search bar when hovering or clicking on it, and hide it when the cursor leaves.
 // @author       You
 // @match        https://www.google.com/*
@@ -158,13 +158,14 @@
   function handlePopupItemClick(keyword) {
     console.log("🚀 ~ handlePopupItemClick ~ keyword:\n\n", keyword);
     // Define a set of keywords that need a colon appended after them
-    const keywordsWithColon = new Set([
+    const keywordsSet = new Set([
       "site",
       "cache",
       "inurl",
       "filetype",
       "intitle",
       "intext",
+      "related",
     ]);
 
     // Get the search bar element
@@ -174,8 +175,13 @@
       const prefix = searchBar.value ? " " : "";
       // Append the selected keyword to the search bar value
       // Check if the keyword is in the set and append ':' accordingly
-      if (keywordsWithColon.has(keyword)) {
+      // Set the cursor position based on whether the keyword is exact_phrase
+      let cursorPosition = searchBar.value.length;
+      if (keywordsSet.has(keyword)) {
         searchBar.value += `${prefix}${keyword}:`;
+        if (keyword === '""') {
+          cursorPosition -= 1; // Move the cursor inside the quotes
+        }
       } else {
         searchBar.value += `${prefix}${keyword}`;
       }
