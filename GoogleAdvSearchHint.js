@@ -215,6 +215,22 @@
     }
   }
 
+  // Function to handle keydown event
+  function handleKeydownEvent(event) {
+    // Check if Ctrl + C is pressed and the cursor is in the search bar
+    const searchBar = document.querySelector("#APjFqb.gLFyf");
+    const popup = document.getElementById("customPopup");
+    if (
+      event.ctrlKey &&
+      event.key === "c" &&
+      document.activeElement === searchBar &&
+      popup
+    ) {
+      event.preventDefault(); // Prevent the default copy action
+      removePopup(); // Remove the popup
+    }
+  }
+
   // Function to create a list item for each advanced search tip
   function createSearchTipsListItems(translations, language) {
     const searchTipsKeys = Object.keys(translations);
@@ -401,6 +417,9 @@
       searchBar.addEventListener("mouseleave", startHidePopup);
       // Hide the popup when the search bar loses focus, with a delay
       searchBar.addEventListener("blur", startHidePopup);
+
+      // Add event listener for keydown
+      document.addEventListener("keydown", handleKeydownEvent);
 
       // Prevent popup from hiding when clicking inside the popup itself
       document.addEventListener("click", function (event) {
