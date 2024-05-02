@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google Search Bar Info Popup
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  Show a popup around the Google search bar when hovering or clicking on it, and hide it when the cursor leaves.
 // @author       You
 // @match        https://www.google.com/*
@@ -176,21 +176,24 @@
       // Append the selected keyword to the search bar value
       // Check if the keyword is in the set and append ':' accordingly
       // Set the cursor position based on whether the keyword is exact_phrase
-      let cursorPosition = searchBar.value.length;
-      if (keywordsSet.has(keyword)) {
-        searchBar.value += `${prefix}${keyword}:`;
-        if (keyword === '""') {
-          cursorPosition -= 1; // Move the cursor inside the quotes
-        }
+      if (keyword === '""') {
+        searchBar.value += `${prefix}""`;
+        let cursorPosition = searchBar.value.length - 1; // Move the cursor inside the quotes
+        searchBar.focus();
+        searchBar.setSelectionRange(cursorPosition, cursorPosition);
       } else {
-        searchBar.value += `${prefix}${keyword}`;
+        if (keywordsSet.has(keyword)) {
+          searchBar.value += `${prefix}${keyword}:`;
+        } else {
+          searchBar.value += `${prefix}${keyword}`;
+        }
+        // Move the cursor to the end of the search bar value
+        searchBar.focus();
+        searchBar.setSelectionRange(
+          searchBar.value.length,
+          searchBar.value.length
+        );
       }
-      // Move the cursor to the end of the search bar value
-      searchBar.focus();
-      searchBar.setSelectionRange(
-        searchBar.value.length,
-        searchBar.value.length
-      );
     }
   }
 
@@ -221,7 +224,9 @@
         const tip = translations[key];
         if (typeof tip === "object" && tip[language]) {
           // Generate the HTML for each tip
-          return `<li data-keyword="${translation[key].code}">
+          const keywordAttribute =
+            key === "exact_phrase" ? "&quot;&quot;" : tip.code;
+          return `<li data-keyword="${keywordAttribute}">
                             <code class="code">${translation[key].code}</code>
                             <span class="colon">:</span>
                             <span class="description">${tip[language]}</span>
