@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google Search Bar Info Popup
 // @namespace    http://tampermonkey.net/
-// @version      2.0
+// @version      2.1
 // @description  Show a popup around the Google search bar when hovering or clicking on it, and hide it when the cursor leaves.
 // @author       You
 // @match        https://www.google.com/*
@@ -366,6 +366,11 @@
     popup.addEventListener("click", function (event) {
       event.stopPropagation(); // Prevent event bubbling
     });
+    // Adjust position to be below the search bar, accounting for scrolling
+    const rect = searchBar.getBoundingClientRect();
+    popup.style.top = `${rect.bottom + window.scrollY}px`; // Use bottom + scrollY for absolute positioning relative to the page
+    popup.style.left = `${rect.left + window.scrollX}px`; // Align left edge with search bar's left
+    popup.style.transform = 'translateX(0%)'; // Remove centering transformation if previously set
   }
 
   // Function to initialize event listeners
