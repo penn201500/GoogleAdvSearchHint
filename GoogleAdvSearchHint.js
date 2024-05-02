@@ -33,7 +33,7 @@
         "zh-CN": '例如："精确短语"',
         en: 'e.g., "exact phrase"',
       },
-      code: '\"\"',
+      code: '""',
     },
     exclude_words: {
       "zh-CN": "排除以下字词：",
@@ -144,24 +144,39 @@
     console.log("Failed to determine the color scheme mode.", error);
   }
 
-    // Function to attach click handlers to list items
-    function attachClickHandlers() {
-      const items = document.querySelectorAll(".tips-list li");
-      items.forEach(item => {
-          item.addEventListener("click", function () {
-              handlePopupItemClick(this.getAttribute("data-keyword"));
-          });
+  // Function to attach click handlers to list items
+  function attachClickHandlers() {
+    const items = document.querySelectorAll(".tips-list li");
+    items.forEach((item) => {
+      item.addEventListener("click", function () {
+        handlePopupItemClick(this.getAttribute("data-keyword"));
       });
+    });
   }
 
   // Function to handle click event on popup items
   function handlePopupItemClick(keyword) {
     console.log("🚀 ~ handlePopupItemClick ~ keyword:\n\n", keyword);
+    // Define a set of keywords that need a colon appended after them
+    const keywordsWithColon = new Set([
+      "site",
+      "cache",
+      "inurl",
+      "filetype",
+      "intitle",
+      "intext",
+    ]);
+
     // Get the search bar element
     const searchBar = document.querySelector("#APjFqb.gLFyf");
     if (searchBar) {
       // Append the selected keyword to the search bar value
-      searchBar.value += `${keyword}`;
+      // Check if the keyword is in the set and append ':' accordingly
+      if (keywordsWithColon.has(keyword)) {
+        searchBar.value += `${keyword}:`;
+      } else {
+        searchBar.value += `${keyword}`;
+      }
       // Move the cursor to the end of the search bar value
       searchBar.focus();
       searchBar.setSelectionRange(
