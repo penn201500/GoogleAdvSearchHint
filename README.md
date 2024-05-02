@@ -10,6 +10,8 @@ This script enhances the Google search experience by displaying a popup with adv
 
 - Dynamically displays a list of advanced Google search tips.
 - Popup appears on hover or click on the search bar.
+- Ensures that multiple rapid clicks do not open multiple instances of the popup.
+- Popup remains visible until the mouse leaves the popup area or the search bar loses focus.
 - Automatic hide on cursor out.
 - Supports both English and simplified Chinese based on user preferences.
 - Custom styled components with dark mode detection.
