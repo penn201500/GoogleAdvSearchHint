@@ -2,6 +2,8 @@
 
 This README is also available in [Chinese](README_CN.md).
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/penn201500/GoogleAdvSearchHint)
+
 ## Google Search Bar Info Popup Script
 
 This script enhances the Google search experience by displaying a popup with advanced search tips around the Google search bar when it is hovered over, clicked, or focused. The popup can be manually controlled: it can be hidden using the `Ctrl + C` shortcut when the cursor is inside the search bar. The popup will disappear when the cursor moves away or when the search bar loses focus.
