@@ -2,6 +2,8 @@
 
 本说明文件亦提供[英文版](README.md)。
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/penn201500/GoogleAdvSearchHint)
+
 ## 谷歌搜索栏信息弹出脚本
 
 该用户脚本通过在鼠标悬停、点击或聚焦时在谷歌搜索栏周围显示包含高级搜索提示的弹出窗口来增强谷歌搜索体验。当光标位于搜索栏内时，还可以使用 `Ctrl + C` 快捷键手动隐藏弹窗。当鼠标移开或搜索栏失去焦点时弹窗会消失。
